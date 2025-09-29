@@ -25,16 +25,44 @@ import UserMenu from "../components/user/UserMenu.tsx";
 			</section>
 
 			<section class="grid content-start gap-3 overflow-hidden">
-				<h2 class="text-xl font-semibold">L'objectif</h2>
-				<p class="text-slate-600">
-					Construire la base de données référente de tous les types de produits,
-					leurs compositions, pièces de rechange et documentations associées.
-				</p>
-				<ul class="list-disc pl-5 text-slate-600">
-					<li>Explorer la composition et les variantes</li>
-					<li>Identifier les pièces compatibles</li>
-					<li>Accéder à des guides et documentations</li>
-				</ul>
+				<h2 class="text-xl font-semibold">Pourquoi ThirdShop</h2>
+				<div class="grid gap-4">
+					<div class="relative rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+						<div class="absolute left-3 top-3" aria-hidden="true">
+							<div class="h-1.5 w-14 rounded-full bg-gradient-to-r from-rose-200 to-blue-200"></div>
+						</div>
+						<div class="pt-6">
+							<div class="text-sm font-semibold text-slate-900">Base mondiale des produits</div>
+							<p class="mt-1 text-sm text-slate-600">Une source unique pour retrouver, comparer et référencer tous les produits.</p>
+						</div>
+					</div>
+
+					<div class="relative rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+						<div class="absolute left-3 top-3" aria-hidden="true">
+							<div class="h-1.5 w-14 rounded-full bg-gradient-to-r from-rose-200 to-blue-200"></div>
+						</div>
+						<div class="pt-6">
+							<div class="text-sm font-semibold text-slate-900">Composants et pièces</div>
+							<p class="mt-1 text-sm text-slate-600">Cartographier la composition, variantes et pièces compatibles.</p>
+							<div class="mt-2 flex flex-wrap gap-2">
+								<span class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700 ring-1 ring-emerald-200">Compatibilité</span>
+								<span class="inline-flex items-center rounded-full bg-sky-50 px-2 py-0.5 text-xs text-sky-700 ring-1 ring-sky-200">Références</span>
+								<span class="inline-flex items-center rounded-full bg-violet-50 px-2 py-0.5 text-xs text-violet-700 ring-1 ring-violet-200">Variantes</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="relative rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+						<div class="absolute left-3 top-3" aria-hidden="true">
+							<div class="h-1.5 w-14 rounded-full bg-gradient-to-r from-rose-200 to-blue-200"></div>
+						</div>
+						<div class="pt-6">
+							<div class="text-sm font-semibold text-slate-900">Docs et guides</div>
+							<p class="mt-1 text-sm text-slate-600">Centraliser manuels, schémas et procédures pour intervenir rapidement.</p>
+							<a href="#" class="mt-2 inline-flex text-xs font-medium text-slate-700 underline underline-offset-4 hover:text-slate-900">Voir un exemple</a>
+						</div>
+					</div>
+				</div>
 			</section>
 		</main>
 
