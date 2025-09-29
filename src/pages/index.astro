@@ -1,11 +1,48 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProductSearch from "../components/productSearch/ui/ProductSearch.tsx";
+import UserMenu from "../components/user/UserMenu.tsx";
 ---
 
 <Layout>
-	<div class="mx-auto max-w-2xl p-4">
-		<h1 class="mb-4 text-3xl font-bold">Recherche de produits</h1>
-		<ProductSearch client:load />
+	<div class="grid h-screen grid-rows-[auto_1fr_auto] overflow-hidden">
+		<!-- Header -->
+		<header class="border-b border-slate-200">
+			<div class="mx-auto flex max-w-5xl items-center justify-between p-4">
+				<div class="flex items-center gap-3">
+					<div class="h-6 w-6 rounded bg-slate-900"></div>
+					<div class="text-lg font-semibold">ThirdShop</div>
+				</div>
+				<UserMenu client:load />
+			</div>
+		</header>
+
+		<!-- Main content: centered columns; internal components handle their own overflow -->
+		<main class="mx-auto grid w-full max-w-5xl grid-cols-1 gap-8 overflow-hidden p-4 md:grid-cols-2">
+			<section class="grid content-start gap-4 overflow-hidden">
+				<h1 class="text-3xl font-bold">Rechercher des produits</h1>
+				<ProductSearch client:load />
+			</section>
+
+			<section class="grid content-start gap-3 overflow-hidden">
+				<h2 class="text-xl font-semibold">L'objectif</h2>
+				<p class="text-slate-600">
+					Construire la base de données référente de tous les types de produits,
+					leurs compositions, pièces de rechange et documentations associées.
+				</p>
+				<ul class="list-disc pl-5 text-slate-600">
+					<li>Explorer la composition et les variantes</li>
+					<li>Identifier les pièces compatibles</li>
+					<li>Accéder à des guides et documentations</li>
+				</ul>
+			</section>
+		</main>
+
+		<!-- Footer (compact, stays within viewport) -->
+		<footer class="border-t border-slate-200">
+			<div class="mx-auto max-w-5xl p-3 text-center text-xs text-slate-500">
+				© 2025 ThirdShop — Base de connaissances produits.
+			</div>
+		</footer>
 	</div>
 </Layout>

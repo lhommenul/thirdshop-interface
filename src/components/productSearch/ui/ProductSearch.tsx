@@ -1,6 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Product, SearchResult } from "../type/ProductSearch";
-import type { TupleResult } from "../../../shared/type/Turple";
+
+export interface Product {
+	id: string;
+	name: string;
+	category?: string;
+	brand?: string;
+}
+
+interface SearchResult {
+	exact: Product | null;
+	similars: Product[];
+}
+
+type TupleResult<T> = [error: Error | null, data: T | null];
 
 function normalize(text: string | undefined | null): string {
 	return (text ?? "")
@@ -36,7 +48,7 @@ function computeSearch(query: string, dataset: Product[]): SearchResult {
 	const similars = valid
 		.filter((p) => normalize(p.name).includes(q))
 		.filter((p) => (exact ? p.id !== exact.id : true))
-		.slice(0, 10);
+		.slice(0, 25);
 
 	return { exact, similars };
 }
@@ -127,12 +139,14 @@ export default function ProductSearch() {
 					{hasSimilars && (
 						<div className="grid gap-1">
 							<div className="font-semibold">Similaires</div>
-							{result.similars.map((p) => (
-								<div key={p.id} className="rounded-md border border-slate-200 p-2">
-									{p.name}
-									{p.brand ? ` — ${p.brand}` : ""}
-								</div>
-							))}
+							<div className="max-h-64 overflow-auto rounded-md border border-slate-200">
+								{result.similars.map((p) => (
+									<div key={p.id} className="border-b border-slate-100 p-2 last:border-b-0">
+										{p.name}
+										{p.brand ? ` — ${p.brand}` : ""}
+									</div>
+								))}
+							</div>
 						</div>
 					)}
 
