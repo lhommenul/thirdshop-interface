@@ -1,0 +1,22 @@
+[
+  { "id": "p_1", "name": "iPhone 14", "brand": "Apple", "category": "Smartphone" },
+  { "id": "p_2", "name": "Galaxy S23", "brand": "Samsung", "category": "Smartphone" },
+  { "id": "p_3", "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "category": "Laptop" },
+  { "id": "p_4", "name": "MacBook Pro 14", "brand": "Apple", "category": "Laptop" },
+  { "id": "p_5", "name": "PlayStation 5", "brand": "Sony", "category": "Console" },
+  { "id": "p_6", "name": "Xbox Series X", "brand": "Microsoft", "category": "Console" },
+  { "id": "p_7", "name": "Nintendo Switch OLED", "brand": "Nintendo", "category": "Console" },
+  { "id": "p_8", "name": "Dyson V15 Detect", "brand": "Dyson", "category": "Aspirateur" },
+  { "id": "p_9", "name": "Roomba j7", "brand": "iRobot", "category": "Robot aspirateur" },
+  { "id": "p_10", "name": "Bose QuietComfort Ultra", "brand": "Bose", "category": "Casque audio" },
+  { "id": "p_11", "name": "Sony WH-1000XM5", "brand": "Sony", "category": "Casque audio" },
+  { "id": "p_12", "name": "Logitech MX Master 3S", "brand": "Logitech", "category": "Souris" },
+  { "id": "p_13", "name": "Kindle Paperwhite", "brand": "Amazon", "category": "Liseuse" },
+  { "id": "p_14", "name": "AirPods Pro", "brand": "Apple", "category": "Écouteurs" },
+  { "id": "p_15", "name": "Surface Pro 9", "brand": "Microsoft", "category": "Tablette" },
+  { "id": "p_16", "name": "Canon EOS R6", "brand": "Canon", "category": "Appareil photo" },
+  { "id": "p_17", "name": "Nikon Z6 II", "brand": "Nikon", "category": "Appareil photo" },
+  { "id": "p_18", "name": "KitchenAid Artisan", "brand": "KitchenAid", "category": "Robot cuisine" },
+  { "id": "p_19", "name": "Moulinex Cookeo", "brand": "Moulinex", "category": "Multicuiseur" },
+  { "id": "p_20", "name": "Philips Hue White Ambiance", "brand": "Philips", "category": "Éclairage" }
+] 
