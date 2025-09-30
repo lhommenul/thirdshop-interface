@@ -1,18 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-
-export interface Product {
-	id: string;
-	name: string;
-	category?: string;
-	brand?: string;
-}
-
-interface SearchResult {
-	exact: Product | null;
-	similars: Product[];
-}
-
-type TupleResult<T> = [error: Error | null, data: T | null];
+import type { Product, SearchResult } from "../type/ProductSearch";
+import type { TupleResult } from "../../../shared/type/Turple";
+import ProductSearchResult from "./ProductSearchResult";
 
 function normalize(text: string | undefined | null): string {
 	return (text ?? "")
@@ -58,6 +47,7 @@ export default function ProductSearch() {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
+	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const brandRef = useRef<HTMLInputElement | null>(null);
@@ -130,7 +120,10 @@ export default function ProductSearch() {
 			{!loading && !error && (
 				<div className="grid gap-2">
 					{result.exact && (
-						<div className="rounded-md border border-slate-200 p-2">
+						<div
+							className="rounded-md border border-slate-200 p-2 cursor-pointer hover:bg-slate-50"
+							onClick={() => setSelectedProduct(result.exact!)}
+						>
 							<strong>Exact:</strong> {result.exact.name}
 							{result.exact.brand ? ` — ${result.exact.brand}` : ""}
 						</div>
@@ -141,7 +134,13 @@ export default function ProductSearch() {
 							<div className="font-semibold">Similaires</div>
 							<div className="max-h-64 overflow-auto rounded-md border border-slate-200">
 								{result.similars.map((p) => (
-									<div key={p.id} className="border-b border-slate-100 p-2 last:border-b-0">
+									<div
+										key={p.id}
+										className="border-b border-slate-100 p-2 last:border-b-0 cursor-pointer hover:bg-slate-50"
+										onClick={() => setSelectedProduct(p)}
+										role="button"
+										tabIndex={0}
+									>
 										{p.name}
 										{p.brand ? ` — ${p.brand}` : ""}
 									</div>
@@ -189,6 +188,12 @@ export default function ProductSearch() {
 					)}
 				</div>
 			)}
+
+			{/* Floating details panel */}
+			<ProductSearchResult
+				product={selectedProduct}
+				onClose={() => setSelectedProduct(null)}
+			/>
 		</div>
 	);
 } 
