@@ -155,6 +155,10 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 										))}
 									</div>
 
+									<div className="h-1 w-full bg-slate-200 my-4 rounded-full" />
+
+									<h2 className="text-lg font-semibold text-slate-900">Documents</h2>
+
 									<div className="mt-3 grid gap-2">
 										<ProductDocuments root={docsSample} initialExpandedIds={["d1", "d2"]} />
 									</div>
