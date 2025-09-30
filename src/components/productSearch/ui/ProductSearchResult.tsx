@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { Product } from "../type/ProductSearch";
 
+import premiere from "../../../assets/images/premiere.png";
+import second from "../../../assets/images/deuxieme.png";
+
 interface ProductSearchResultProps {
 	product: Product | null;
 	onClose: () => void;
@@ -15,6 +18,8 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 	const dragStartXRef = useRef(0);
 	const startWidthRef = useRef(0);
 	const dragDirectionRef = useRef<"left" | "right">("right");
+
+	const images = [premiere, second];
 
 	useEffect(() => {
 		function onKeyDown(e: KeyboardEvent) {
@@ -169,6 +174,16 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 
 								<div className="pt-6">
 									<div className="text-base font-semibold text-slate-900">{product.name}</div>
+
+									{/* Mini carousel très simple avec grid */}
+									<div className="grid grid-cols-2 gap-2 w-fit mb-2">
+										{images.map((image, index) => (	
+											<div key={index} className="rounded overflow-hidden border border-slate-200 bg-white flex items-center justify-center rounded-lg w-40 h-40 shadow-md">
+												<img src={image.src} alt={`Image ${index + 1}`} className="w-40 h-40 object-cover" />
+											</div>
+										))}
+									</div>
+
 									{product.brand && (
 										<div className="mt-0.5 text-sm text-slate-600">Marque: {product.brand}</div>
 									)}
