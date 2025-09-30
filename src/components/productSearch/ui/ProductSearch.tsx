@@ -48,6 +48,8 @@ export default function ProductSearch() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
 	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+	const [disableBackdrop, setDisableBackdrop] = useState(false);
+	const [splitView, setSplitView] = useState(false);
 
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const brandRef = useRef<HTMLInputElement | null>(null);
@@ -104,8 +106,19 @@ export default function ProductSearch() {
 					className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-slate-400"
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
+					onFocus={() => window.dispatchEvent(new CustomEvent("product-search-focus"))}
+					onBlur={() => window.dispatchEvent(new CustomEvent("product-search-blur"))}
 				/>
 				<p className="text-sm text-slate-500">Astuce: tapez le nom exact pour un match parfait, sinon on propose des similaires.</p>
+				<label className="mt-1 inline-flex items-center gap-2 text-xs text-slate-600">
+					<input
+						type="checkbox"
+						className="h-3.5 w-3.5 rounded border-slate-300"
+						checked={disableBackdrop}
+						onChange={(e) => setDisableBackdrop(e.target.checked)}
+					/>
+					Désactiver fond sombre
+				</label>
 			</div>
 
 			{loading && (
@@ -122,7 +135,7 @@ export default function ProductSearch() {
 					{result.exact && (
 						<div
 							className="rounded-md border border-slate-200 p-2 cursor-pointer hover:bg-slate-50"
-							onClick={() => setSelectedProduct(result.exact!)}
+							onClick={() => { setSelectedProduct(result.exact!); setSplitView(true); }}
 						>
 							<strong>Exact:</strong> {result.exact.name}
 							{result.exact.brand ? ` — ${result.exact.brand}` : ""}
@@ -137,7 +150,7 @@ export default function ProductSearch() {
 									<div
 										key={p.id}
 										className="border-b border-slate-100 p-2 last:border-b-0 cursor-pointer hover:bg-slate-50"
-										onClick={() => setSelectedProduct(p)}
+										onClick={() => { setSelectedProduct(p); setSplitView(true); }}
 										role="button"
 										tabIndex={0}
 									>
@@ -189,10 +202,11 @@ export default function ProductSearch() {
 				</div>
 			)}
 
-			{/* Floating details panel */}
 			<ProductSearchResult
 				product={selectedProduct}
-				onClose={() => setSelectedProduct(null)}
+				onClose={() => { setSelectedProduct(null); setSplitView(false); }}
+				disableBackdrop={disableBackdrop || splitView}
+				mode={splitView ? "split" : "modal"}
 			/>
 		</div>
 	);
