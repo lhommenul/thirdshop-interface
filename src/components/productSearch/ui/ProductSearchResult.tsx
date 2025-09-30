@@ -38,13 +38,9 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 		}
 		function onMouseUp() {
 			draggingRef.current = false;
-			document.removeEventListener("mousemove", onMouseMove);
-			document.removeEventListener("mouseup", onMouseUp);
 		}
-		if (draggingRef.current) {
-			document.addEventListener("mousemove", onMouseMove);
-			document.addEventListener("mouseup", onMouseUp);
-		}
+		document.addEventListener("mousemove", onMouseMove);
+		document.addEventListener("mouseup", onMouseUp);
 		return () => {
 			document.removeEventListener("mousemove", onMouseMove);
 			document.removeEventListener("mouseup", onMouseUp);
@@ -193,7 +189,7 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 						</div>
 					) : (
 						// Modal layout with adjustable width (right-edge handle)
-						<div className="absolute inset-x-0 bottom-0 mx-auto w-full p-4 sm:inset-auto sm:bottom-auto sm:right-6 sm:top-6 sm:p-0" style={{ maxWidth: `${Math.max(currentWidth, 320)}px` }}>
+						<div className="absolute inset-x-0 bottom-0 mx-auto w-full p-4 sm:inset-auto sm:bottom-auto sm:right-6 sm:top-6 sm:p-0 pointer-events-auto" style={{ maxWidth: `${Math.max(currentWidth, 320)}px` }}>
 							<div className="relative rounded-lg border border-slate-200 bg-white p-4 shadow-xl">
 								<div className="absolute left-3 top-3" aria-hidden="true">
 									<div className="h-1.5 w-14 rounded-full bg-gradient-to-r from-rose-200 to-blue-200"></div>

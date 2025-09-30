@@ -74,13 +74,13 @@ import UserMenu from "../components/user/UserMenu.tsx";
 	</div>
 
 	<script>
-		window.addEventListener('product-search-focus', () => {
+
+		function onProductSearchFocus() {
 			const section = document.getElementById('why-section');
 			if (section) section.classList.add('hidden');
-		});
-		window.addEventListener('product-search-blur', () => {
-			const section = document.getElementById('why-section');
-			if (section) section.classList.remove('hidden');
-		});
+		}
+
+		window.addEventListener('product-search-focus', onProductSearchFocus);
+		
 	</script>
 </Layout>
