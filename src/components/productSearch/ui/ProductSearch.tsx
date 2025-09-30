@@ -110,15 +110,6 @@ export default function ProductSearch() {
 					onBlur={() => window.dispatchEvent(new CustomEvent("product-search-blur"))}
 				/>
 				<p className="text-sm text-slate-500">Astuce: tapez le nom exact pour un match parfait, sinon on propose des similaires.</p>
-				<label className="mt-1 inline-flex items-center gap-2 text-xs text-slate-600">
-					<input
-						type="checkbox"
-						className="h-3.5 w-3.5 rounded border-slate-300"
-						checked={disableBackdrop}
-						onChange={(e) => setDisableBackdrop(e.target.checked)}
-					/>
-					Désactiver fond sombre
-				</label>
 			</div>
 
 			{loading && (
