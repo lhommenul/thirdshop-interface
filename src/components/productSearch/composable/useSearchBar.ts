@@ -37,6 +37,13 @@ export function useSearchBar() {
 
     }
 
+    function reset() {
+        setQuery("");
+        setProducts([]);
+        setLoading(true);
+        setError(null);
+    }
+
     const search = async ( params: SearchBarParams ): Promise<TupleResult<Product[]>> => {
 
         try {

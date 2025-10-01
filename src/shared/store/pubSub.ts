@@ -1,4 +1,7 @@
-export type EventKey = string | symbol;
+export enum EventKey {
+  SEARCH_BAR_SEARCH = "search-bar:search",
+  SEARCH_BAR_ADD_PRODUCT = "search-bar:add-product",
+}
 
 export type EventHandler<T = unknown> = (payload: T) => void;
 

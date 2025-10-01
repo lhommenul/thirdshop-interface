@@ -57,7 +57,7 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 	if (!product) return null;
 
 	const isSplit = mode === "split";
-	const wrapperClass = disableBackdrop ? "fixed inset-0 z-50 pointer-events-none" : "fixed inset-0 z-50";
+	const wrapperClass = disableBackdrop ? " inset-0 z-50 pointer-events-none" : " inset-0 z-50";
 	const currentWidth = panelWidth ?? 448; // default 28rem
 
 	function handleDragStartLeft(e: React.MouseEvent<HTMLDivElement>) {
