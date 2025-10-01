@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Product, SearchResult } from "../type/ProductSearch";
 import type { TupleResult } from "../../../shared/type/Turple";
 import ProductSearchResult from "./ProductSearchResult";
+import { useSearchBar } from "../composable/useSearchBar";
+import { pubSub } from "../../../shared/store/pubSub";
 
 function normalize(text: string | undefined | null): string {
 	return (text ?? "")
@@ -10,21 +12,6 @@ function normalize(text: string | undefined | null): string {
 		.replace(/\p{Diacritic}/gu, "")
 		.toLowerCase()
 		.trim();
-}
-
-async function fetchProductDataset(): Promise<TupleResult<Product[]>> {
-	try {
-		const response = await fetch("/data/products.json", {
-			headers: { "cache-control": "no-cache" },
-		});
-		if (!response.ok) {
-			return [new Error(`HTTP ${response.status}`), null];
-		}
-		const products = (await response.json()) as Product[];
-		return [null, Array.isArray(products) ? products : []];
-	} catch (error) {
-		return [error as Error, null];
-	}
 }
 
 function computeSearch(query: string, dataset: Product[]): SearchResult {
@@ -43,10 +30,8 @@ function computeSearch(query: string, dataset: Product[]): SearchResult {
 }
 
 export default function ProductSearch() {
-	const [query, setQuery] = useState("");
-	const [products, setProducts] = useState<Product[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<Error | null>(null);
+
+	const { query, products, loading, error } = useSearchBar();
 	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 	const [disableBackdrop, setDisableBackdrop] = useState(false);
 	const [splitView, setSplitView] = useState(false);
@@ -54,26 +39,6 @@ export default function ProductSearch() {
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const brandRef = useRef<HTMLInputElement | null>(null);
 	const categoryRef = useRef<HTMLInputElement | null>(null);
-
-	useEffect(() => {
-		let mounted = true;
-		(async () => {
-			setLoading(true);
-			const [err, data] = await fetchProductDataset();
-			if (!mounted) return;
-			if (err) {
-				setError(err);
-				setProducts([]);
-			} else {
-				setError(null);
-				setProducts(data ?? []);
-			}
-			setLoading(false);
-		})();
-		return () => {
-			mounted = false;
-		};
-	}, []);
 
 	const result = useMemo(() => computeSearch(query, products), [query, products]);
 	const hasExact = !!result.exact;
@@ -91,7 +56,8 @@ export default function ProductSearch() {
 			category: (categoryRef.current?.value ?? "").trim() || undefined,
 		};
 
-		setProducts((prev) => [newProduct, ...prev]);
+		pubSub.emit("search-bar:add-product", { query: name, products: [newProduct] });
+
 		return [null, newProduct];
 	}
 
@@ -105,7 +71,7 @@ export default function ProductSearch() {
 					placeholder="Rechercher un produit..."
 					className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-slate-400"
 					value={query}
-					onChange={(e) => setQuery(e.target.value)}
+					onChange={(e) => pubSub.emit("search-bar:search", { query: e.target.value, products })}
 					onFocus={() => window.dispatchEvent(new CustomEvent("product-search-focus"))}
 					onBlur={() => window.dispatchEvent(new CustomEvent("product-search-blur"))}
 				/>
@@ -179,7 +145,7 @@ export default function ProductSearch() {
 								onClick={() => {
 									const [err, created] = handleAddProduct();
 									if (!err && created) {
-										setQuery(created.name);
+										pubSub.emit("search-bar:search", created.name);
 										if (brandRef.current) brandRef.current.value = "";
 										if (categoryRef.current) categoryRef.current.value = "";
 									}
