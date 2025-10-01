@@ -4,6 +4,7 @@ import type { Product } from "../type/ProductSearch";
 import premiere from "../../../assets/images/premiere.png";
 import second from "../../../assets/images/deuxieme.png";
 import ProductDocuments, { type ProductDocumentNode } from "./ProductDocuments";
+import ProductCharacteristics, { type Cara } from "./ProductCharacteristics";
 
 interface ProductSearchResultProps {
 	product: Product | null;
@@ -90,6 +91,12 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 		{ id: "d3", title: "Lien support", type: "link", url: "#", category: ["Vue éclatée", "Câblage", "Guide utilisateur"] },
 	];
 
+	const characteristics: Cara[] = [
+		{ label: "Marque", value: product.brand ?? "-", cateory: ["Général"] },
+		{ label: "Catégorie", value: product.category ?? "-", cateory: ["Général"] },
+		{ label: "Identifiant", value: product.id, cateory: ["Référence"] },
+	];
+
 	return (
 		<div className={wrapperClass}>
 			{!disableBackdrop && !isFullscreen && (
@@ -119,6 +126,7 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 						<div className="pt-6">
 							<div className="text-base font-semibold text-slate-900">{product.name}</div>
 							<div className="mt-3 grid gap-2">
+								<ProductCharacteristics items={characteristics} title="Caractéristiques" columns={2} />
 								<ProductDocuments root={docsSample} initialExpandedIds={["d1", "d2"]} />
 							</div>
 						</div>
@@ -138,7 +146,7 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M4 9a1 1 0 0 0 1-1V5h3a1 1 0 1 0 0-2H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1Zm16 6a1 1 0 0 0-1 1v3h-3a1 1 0 1 0 0 2h4a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1ZM20 3h-4a1 1 0 1 0 0 2h3v3a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1ZM9 20a1 1 0 0 0-1-1H5v-3a1 1 0 1 0-2 0v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1Z" /></svg>
 									</button>
 									<button className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700" onClick={onClose} title="Fermer">
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 11-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clipRule="evenodd" /></svg>
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 1 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06z" clipRule="evenodd" /></svg>
 									</button>
 								</div>
 
@@ -153,6 +161,10 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 												<img src={image.src} alt={`Image ${index + 1}`} className="w-40 h-40 object-cover" />
 											</div>
 										))}
+									</div>
+
+									<div className="mt-3 grid gap-2">
+										<ProductCharacteristics items={characteristics} title="Caractéristiques" columns={2} />
 									</div>
 
 									<div className="h-1 w-full bg-slate-200 my-4 rounded-full" />
@@ -177,7 +189,7 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M4 9a1 1 0 0 0 1-1V5h3a1 1 0 1 0 0-2H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1Zm16 6a1 1 0 0 0-1 1v3h-3a1 1 0 1 0 0 2h4a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1ZM20 3h-4a1 1 0 1 0 0 2h3v3a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1ZM9 20a1 1 0 0 0-1-1H5v-3a1 1 0 1 0-2 0v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1Z" /></svg>
 									</button>
 									<button className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700" onClick={onClose} title="Fermer">
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 11-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clipRule="evenodd" /></svg>
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 1 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06z" clipRule="evenodd" /></svg>
 									</button>
 								</div>
 
@@ -195,6 +207,7 @@ export default function ProductSearchResult({ product, onClose, disableBackdrop 
 									</div>
 
 									<div className="mt-3 grid gap-2">
+										<ProductCharacteristics items={characteristics} title="Caractéristiques" columns={2} />
 										<ProductDocuments root={docsSample} initialExpandedIds={["d1", "d2"]} />
 									</div>
 								</div>
