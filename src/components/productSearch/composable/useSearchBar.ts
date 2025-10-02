@@ -7,6 +7,7 @@ import type { Cara } from "../ui/ProductCharacteristics";
 type SearchBarParams = {
     query?: string;
     characteristics?: Cara[];
+    suggestions?: string[];
 }
 
 type SearchBarResults = {
@@ -18,6 +19,7 @@ export function useSearchBar() {
     const [state, setState] = useState<SearchBarParams>({
         query: "",
         characteristics: [],
+        suggestions: [],
     });
 
     const [results, setResults] = useState<SearchBarResults>({
@@ -33,10 +35,11 @@ export function useSearchBar() {
 
     function initialize() {
         pubSub.on("search-bar:search", async ( params: SearchBarParams ) => {
-            console.log(state)
+            
             setState({
                 query: params.query ?? state.query,
                 characteristics: Array.from(new Set([...(state.characteristics ?? []), ...(params.characteristics ?? [])])),
+                suggestions: params.suggestions ?? state.suggestions,
             });
 
             setLoading(true);
@@ -46,8 +49,14 @@ export function useSearchBar() {
             if (err) {
                 setError(err);
             } else {
+
+                const filteredProducts = data.filter(( product ) => {
+                    if (!state.query) return true;
+                    return product.brand?.includes(state.query) || product.name.includes(state.query) || product.category?.includes(state.query);
+                })
+
                 setResults({
-                    products: data ?? [],
+                    products: filteredProducts ?? [],
                 });
                 setError(null);
             }
@@ -96,8 +105,8 @@ export function useSearchBar() {
     }
 
     return {
-        ...state,
-        ...results,
+        state,
+        results,
         loading,
         error,
         search,

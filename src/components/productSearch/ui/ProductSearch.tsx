@@ -5,33 +5,9 @@ import ProductSearchResult from "./ProductSearchResult";
 import { useSearchBar } from "../composable/useSearchBar";
 import { pubSub } from "../../../shared/store/pubSub";
 
-function normalize(text: string | undefined | null): string {
-	return (text ?? "")
-		.toString()
-		.normalize("NFD")
-		.replace(/\p{Diacritic}/gu, "")
-		.toLowerCase()
-		.trim();
-}
-
-function computeSearch(query: string, dataset: Product[]): SearchResult {
-	const q = normalize(query);
-	if (!q) return { exact: null, similars: [] };
-
-	const valid = dataset.filter((p) => p && typeof p.name === "string");
-	const exact = valid.find((p) => normalize(p.name) === q) ?? null;
-
-	const similars = valid
-		.filter((p) => normalize(p.name).includes(q))
-		.filter((p) => (exact ? p.id !== exact.id : true))
-		.slice(0, 25);
-
-	return { exact, similars };
-}
-
 export default function ProductSearch() {
 
-	const { query, products, loading, error, characteristics } = useSearchBar();
+	const { state, results, loading, error } = useSearchBar();
 	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 	const [disableBackdrop, setDisableBackdrop] = useState(false);
 	const [splitView, setSplitView] = useState(false);
@@ -40,10 +16,8 @@ export default function ProductSearch() {
 	const brandRef = useRef<HTMLInputElement | null>(null);
 	const categoryRef = useRef<HTMLInputElement | null>(null);
 
-	const result = useMemo(() => computeSearch(query, products), [query, products]);
-	const hasExact = !!result.exact;
-	const hasSimilars = result.similars.length > 0;
-	const showCreate = !hasExact && !hasSimilars && query.trim().length > 0;
+	const hasSimilars = results.products.length > 0;
+	const showCreate = !hasSimilars && state.query && state.query.trim().length > 0;
 
 	function handleAddProduct(): TupleResult<Product> {
 		const name = (nameRef.current?.value ?? "").trim();
@@ -56,7 +30,7 @@ export default function ProductSearch() {
 			category: (categoryRef.current?.value ?? "").trim() || undefined,
 		};
 
-		pubSub.emit("search-bar:add-product", { query: name, products: [newProduct], characteristics });
+		pubSub.emit("search-bar:add-product", { query: name });
 
 		return [null, newProduct];
 	}
@@ -70,15 +44,15 @@ export default function ProductSearch() {
 					type="text"
 					placeholder="Rechercher un produit..."
 					className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-slate-400"
-					value={query}
-					onChange={(e) => pubSub.emit("search-bar:search", { query: e.target.value, characteristics })}
+					value={state.query}
+					onChange={(e) => pubSub.emit("search-bar:search", { query: e.target.value })}
 					onFocus={() => window.dispatchEvent(new CustomEvent("product-search-focus"))}
 					onBlur={() => window.dispatchEvent(new CustomEvent("product-search-blur"))}
 				/>
 				<p className="text-sm text-slate-500">Astuce: tapez le nom exact pour un match parfait, sinon on propose des similaires.</p>
 
 
-				{characteristics?.map((c) => (
+				{state.characteristics?.map((c) => (
 					<div key={c.toString()}>{c.label}: {c.value}</div>
 				))}
 			</div>
@@ -94,21 +68,12 @@ export default function ProductSearch() {
 
 			{!loading && !error && (
 				<div className="grid gap-2">
-					{result.exact && (
-						<div
-							className="rounded-md border border-slate-200 p-2 cursor-pointer hover:bg-slate-50"
-							onClick={() => { setSelectedProduct(result.exact!); setSplitView(true); }}
-						>
-							<strong>Exact:</strong> {result.exact.name}
-							{result.exact.brand ? ` — ${result.exact.brand}` : ""}
-						</div>
-					)}
 
 					{hasSimilars && (
 						<div className="grid gap-1">
 							<div className="font-semibold">Similaires</div>
 							<div className="max-h-64 overflow-auto rounded-md border border-slate-200">
-								{result.similars.map((p) => (
+								{results.products.map((p) => (
 									<div
 										key={p.id}
 										className="border-b border-slate-100 p-2 last:border-b-0 cursor-pointer hover:bg-slate-50"
@@ -130,7 +95,7 @@ export default function ProductSearch() {
 							<input
 								ref={nameRef}
 								type="text"
-								defaultValue={query}
+								defaultValue={state.query}
 								placeholder="Nom du produit"
 								className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-slate-400"
 							/>
@@ -150,7 +115,7 @@ export default function ProductSearch() {
 								onClick={() => {
 									const [err, created] = handleAddProduct();
 									if (!err && created) {
-										pubSub.emit("search-bar:search", created.name);
+										pubSub.emit("search-bar:search", { query: created.name });
 										if (brandRef.current) brandRef.current.value = "";
 										if (categoryRef.current) categoryRef.current.value = "";
 									}
@@ -168,7 +133,6 @@ export default function ProductSearch() {
 				product={selectedProduct}
 				onClose={() => { setSelectedProduct(null); setSplitView(false); }}
 				disableBackdrop={disableBackdrop || splitView}
-				mode={splitView ? "split" : "modal"}
 			/>
 		</div>
 	);
