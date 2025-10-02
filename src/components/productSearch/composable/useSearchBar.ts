@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../type/ProductSearch";
 import type { TupleResult } from "../../../shared/type/Turple";
-import { pubSub } from "../../../shared/store/pubSub";
+import { EventKey, pubSub } from "../../../shared/store/pubSub";
 import type { Cara } from "../ui/ProductCharacteristics";
 
 type SearchBarParams = {
@@ -34,13 +34,16 @@ export function useSearchBar() {
     }, []);
 
     function initialize() {
-        pubSub.on("search-bar:search", async ( params: SearchBarParams ) => {
+        
+        pubSub.on(EventKey.SEARCH_BAR_SEARCH, async ( params: SearchBarParams ) => {
             
             setState({
                 query: params.query ?? state.query,
                 characteristics: Array.from(new Set([...(state.characteristics ?? []), ...(params.characteristics ?? [])])),
                 suggestions: params.suggestions ?? state.suggestions,
             });
+
+            console.log(Array.from(new Set([...(state.characteristics ?? []), ...(params.characteristics ?? [])])));
 
             setLoading(true);
             setError(null);
@@ -110,6 +113,7 @@ export function useSearchBar() {
         loading,
         error,
         search,
+        reset
     }
 	
 }
