@@ -11,7 +11,13 @@ import "../styles/global.css";
 		<meta name="generator" content={Astro.generator} />
 		<title>ThirdShop</title>
 	</head>
-	<body>
+	<body class="flex flex-col h-screen">
 		<slot />
+		
+		<footer class="border-t border-slate-200">
+			<div class="mx-auto max-w-5xl p-3 text-center text-xs text-slate-500">
+				© 2025 ThirdShop — Base de connaissances produits.
+			</div>
+		</footer>
 	</body>
 </html>
