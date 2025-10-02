@@ -2,16 +2,28 @@ import { useEffect, useState } from "react";
 import type { Product } from "../type/ProductSearch";
 import type { TupleResult } from "../../../shared/type/Turple";
 import { pubSub } from "../../../shared/store/pubSub";
+import type { Cara } from "../ui/ProductCharacteristics";
 
 type SearchBarParams = {
-    query: string;
+    query?: string;
+    characteristics?: Cara[];
+}
+
+type SearchBarResults = {
     products: Product[];
 }
 
 export function useSearchBar() {
 
-    const [query, setQuery] = useState("");
-	const [products, setProducts] = useState<Product[]>([]);
+    const [state, setState] = useState<SearchBarParams>({
+        query: "",
+        characteristics: [],
+    });
+
+    const [results, setResults] = useState<SearchBarResults>({
+        products: [],
+    });
+
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
 
@@ -21,7 +33,12 @@ export function useSearchBar() {
 
     function initialize() {
         pubSub.on("search-bar:search", async ( params: SearchBarParams ) => {
-            setQuery(params.query);
+            console.log(state)
+            setState({
+                query: params.query ?? state.query,
+                characteristics: Array.from(new Set([...(state.characteristics ?? []), ...(params.characteristics ?? [])])),
+            });
+
             setLoading(true);
             setError(null);
     
@@ -29,7 +46,10 @@ export function useSearchBar() {
             if (err) {
                 setError(err);
             } else {
-                setProducts(data ?? []);
+                setResults({
+                    products: data ?? [],
+                });
+                setError(null);
             }
             setLoading(false);
     
@@ -38,9 +58,11 @@ export function useSearchBar() {
     }
 
     function reset() {
-        setQuery("");
-        setProducts([]);
-        setLoading(true);
+        setState({
+            query: "",
+            characteristics: [],
+        });
+        setLoading(false);
         setError(null);
     }
 
@@ -74,8 +96,8 @@ export function useSearchBar() {
     }
 
     return {
-        query,
-        products,
+        ...state,
+        ...results,
         loading,
         error,
         search,

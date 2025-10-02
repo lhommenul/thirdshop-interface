@@ -31,7 +31,7 @@ function computeSearch(query: string, dataset: Product[]): SearchResult {
 
 export default function ProductSearch() {
 
-	const { query, products, loading, error } = useSearchBar();
+	const { query, products, loading, error, characteristics } = useSearchBar();
 	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 	const [disableBackdrop, setDisableBackdrop] = useState(false);
 	const [splitView, setSplitView] = useState(false);
@@ -56,7 +56,7 @@ export default function ProductSearch() {
 			category: (categoryRef.current?.value ?? "").trim() || undefined,
 		};
 
-		pubSub.emit("search-bar:add-product", { query: name, products: [newProduct] });
+		pubSub.emit("search-bar:add-product", { query: name, products: [newProduct], characteristics });
 
 		return [null, newProduct];
 	}
@@ -71,11 +71,16 @@ export default function ProductSearch() {
 					placeholder="Rechercher un produit..."
 					className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-slate-400"
 					value={query}
-					onChange={(e) => pubSub.emit("search-bar:search", { query: e.target.value, products })}
+					onChange={(e) => pubSub.emit("search-bar:search", { query: e.target.value, characteristics })}
 					onFocus={() => window.dispatchEvent(new CustomEvent("product-search-focus"))}
 					onBlur={() => window.dispatchEvent(new CustomEvent("product-search-blur"))}
 				/>
 				<p className="text-sm text-slate-500">Astuce: tapez le nom exact pour un match parfait, sinon on propose des similaires.</p>
+
+
+				{characteristics?.map((c) => (
+					<div key={c.toString()}>{c.label}: {c.value}</div>
+				))}
 			</div>
 
 			{loading && (

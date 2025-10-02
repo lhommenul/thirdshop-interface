@@ -80,7 +80,7 @@ function SearchIcon() {
 }
 
 function handleSearch(item: Cara) {
-	pubSub.emit("search-bar:search", { query: item.value, products: [] });
+	pubSub.emit("search-bar:search", { characteristics: [item] });
 }
 
 export default function ProductCharacteristics({
